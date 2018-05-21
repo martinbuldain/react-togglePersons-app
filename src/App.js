@@ -14,24 +14,20 @@ class App extends Component {
     }
   }
 
-  /*changeName = () => {
-    let nuevaPersona = {name:'Juan', age:50};
-    this.setState({
-      persons: [...this.state.persons, nuevaPersona]
+  changeNameHandler = (e, id) => {
+    const personIndex = this.state.persons.findIndex(person => {
+      return person.id === id;
     });
-    console.log('Se agregò la persona', nuevaPersona);
-  }*/
-
-  changeNameHandler = (e) => {
-    this.setState({
-      persons: [
-        {name:e.target.value, age:26},
-        {name:'Fede', age:27}
-      ]
-    });
+    const person = {
+      ...this.state.persons[personIndex]
+    };
+    person.name = e.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+    this.setState({persons:persons});
   }
 
-  togglePersonsHandler = () => {
+  toggleButtonHandler = () => {
     const doesToggle = this.state.togglePersons;
     this.setState({
       togglePersons: !doesToggle
@@ -39,6 +35,7 @@ class App extends Component {
   }
 
   deletePersonHandler = (personIndex) => {
+    console.log(personIndex);
     //const persons = this.state.persons.slice(); //Otra forma de copiar los elementos del state de forma segura.
     const persons = [...this.state.persons]; //De esta forma mantengo la propiedad de inmutabilidad del state.
     persons.splice(personIndex, 1);
@@ -46,6 +43,13 @@ class App extends Component {
   }
 
   render() {
+    const style = {
+      backgroundColor: 'green',
+      font: 'inherit',
+      border: '1px solid blue',
+      padding: '8px',
+      cursor: 'pointer'
+    };
     let persons = null;
     if(this.state.togglePersons){
       persons = (
@@ -55,16 +59,28 @@ class App extends Component {
                   key={person.id}
                   name={person.name} 
                   age={person.age} 
-                  deletePerson={() => this.deletePersonHandler(index)} />
+                  deletePerson={() => this.deletePersonHandler(index)} 
+                  changeName={(event) => this.changeNameHandler(event, person.id)}/>
           })}
         </div>
       );
+
+      style.backgroundColor = 'red';
+    }
+
+    let classes = [];
+    if(this.state.persons.length <= 2){
+      classes.push('red');
+    }
+    if(this.state.persons.length <= 1){
+      classes.push('bold');
     }
 
     return (
       <div className="App">
         <h1>Udemy React Course</h1>
-        <button className='Button' onClick={this.togglePersonsHandler} >Show/Hide</button>
+        <p className={classes.join(' ')}>Esto funciona!!</p>
+        <button style={style} onClick={this.toggleButtonHandler} >Show/Hide</button>
         {persons}
       </div>
     );
