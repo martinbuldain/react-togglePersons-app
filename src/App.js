@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
-import Person from './components/Person';
+import Persons from './components/Persons';
+import ToggleButton from './components/ToggleButton';
 
 class App extends Component {
   constructor(){
@@ -35,7 +36,6 @@ class App extends Component {
   }
 
   deletePersonHandler = (personIndex) => {
-    console.log(personIndex);
     //const persons = this.state.persons.slice(); //Otra forma de copiar los elementos del state de forma segura.
     const persons = [...this.state.persons]; //De esta forma mantengo la propiedad de inmutabilidad del state.
     persons.splice(personIndex, 1);
@@ -43,44 +43,19 @@ class App extends Component {
   }
 
   render() {
-    const style = {
-      backgroundColor: 'green',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer'
-    };
     let persons = null;
     if(this.state.togglePersons){
-      persons = (
-        <div>
-          {this.state.persons.map((person, index) => {
-            return <Person 
-                  key={person.id}
-                  name={person.name} 
-                  age={person.age} 
-                  deletePerson={() => this.deletePersonHandler(index)} 
-                  changeName={(event) => this.changeNameHandler(event, person.id)}/>
-          })}
-        </div>
-      );
-
-      style.backgroundColor = 'red';
-    }
-
-    let classes = [];
-    if(this.state.persons.length <= 2){
-      classes.push('red');
-    }
-    if(this.state.persons.length <= 1){
-      classes.push('bold');
+      persons = <Persons 
+            persons={this.state.persons}
+            deletePersonHandler={this.deletePersonHandler}
+            changeNameHandler={this.changeNameHandler} />
     }
 
     return (
       <div className="App">
-        <h1>Udemy React Course</h1>
-        <p className={classes.join(' ')}>Esto funciona!!</p>
-        <button style={style} onClick={this.toggleButtonHandler} >Show/Hide</button>
+        <ToggleButton 
+          toggleButtonHandler={this.toggleButtonHandler} 
+          persons={this.state.person} />
         {persons}
       </div>
     );
